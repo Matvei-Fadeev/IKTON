@@ -30,7 +30,11 @@ def get_name(message):
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
 	if message.text == "Начать очередь":
-		bot.send_message(message.from_user.id, "Создание списка")
+		keyboard = types.InLineKeyboardMarkup()
+		key_list = types.InLineKeyboardButton(text="Создание списка")
+		keyboard.add(key_list)
+		options = "Возможные действия:"
+		bot.send_message(message.from_user.id, options, reply_markup=keyboard)
 	elif message.text == '/reg':
 		bot.register_next_step_handler(message, get_name) #следующий шаг – функция get_name
 	else:
