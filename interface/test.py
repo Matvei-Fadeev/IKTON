@@ -8,7 +8,7 @@ def welcome_start(message):
 
 def welcome_help(message):
 	bot.send_message(message.chat.id, 'Как тебе помочь?')
-	
+
 
 name = ''
 surname = ''
@@ -18,6 +18,9 @@ age = 0
 def get_text_messages(message):
 	if message.text == "Начать очередь":
 		bot.send_message(message.from_user.id, "Создание списка")
+	elif message.text == '/reg':
+		bot.send_message(message.from_user.id, "Как тебя зовут?")
+		bot.register_next_step_handler(message, get_name) #следующий шаг – функция get_name
 	else:
 		bot.send_message(message.from_user.id, "Напиши /help.")
 
@@ -37,5 +40,5 @@ def get_name(message):
 def get_surname(message):
 	global surname
 	surname = message.text
-        	
+
 bot.polling(none_stop=True, interval=0)
