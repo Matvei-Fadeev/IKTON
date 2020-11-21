@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-*.token.py
+*token.py
 interface/queue_bot_token.py
 
 # C extensions
