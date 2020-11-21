@@ -1,2 +1,2 @@
 # IKTON
-Telegram Bot for IKT hackathon
+Telegram Bot for IKT hackathon!
