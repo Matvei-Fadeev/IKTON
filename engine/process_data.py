@@ -4,7 +4,38 @@ import shutil
 
 
 def add_user(label, name, telegram_id):
-    pass
+    current_path = cfg.db_files_location + label + ".sql"
+    conn = sqlite3.connect(current_path)
+    cursor = conn.cursor()
+    try:
+        # ================
+
+        table_name = "queue"
+        column_name = "nickname"
+        column_tid = "telegramID"
+        column_data = "data"        #!!!!!!
+        column_pos = "position"     #!!!!!!
+        column_pri = "priority"
+
+        request = """ UPDATE %s
+            SET %s = '%s',
+                %s = '%s',
+                %s = '%s',
+                %s = '%s'
+            WHERE %s = %d
+            """ % (table_name,
+                    column_name, name
+                  , column_tid, telegram_id
+                  , column_pri, 0
+                  , )
+
+        # ================
+        cursor.execute(request)
+    except sqlite3.DatabaseError as err:
+        time.sleep(cfg.g_error_sleep_sec)
+
+    conn.close()
+
 
 def remove_user(label, name, telegram_id):
     pass
