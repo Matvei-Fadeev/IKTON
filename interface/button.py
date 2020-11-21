@@ -16,6 +16,7 @@ def welcome_help(message):
 @bot.message_handler(content_types=["text"])
 
 def get_button(message):
+    bot.send_message(message.chat.id, "Начало")
     if message.text == "Меню":
         bot.send_message(message.chat.id, "Варианты действий")
         keyboard = types.InlineKeyboardMarkup() #Создание клавиатуры
@@ -29,6 +30,7 @@ def get_button(message):
         keyboard.add(delete_queue_button)
 
         bot.send_message(message.from_user.id, "Нажмити на кнопку:", reply_markup=keyboard)
+
 @bot.callback_query_handler(func=lambda call: True)
 def query_handler(call):
     bot.answer_callback_query(callback_query_id=call.id, text='Ответ')
