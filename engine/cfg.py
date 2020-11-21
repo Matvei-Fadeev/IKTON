@@ -6,7 +6,7 @@ PORT = 2222
 db_files_location = "./db_queues/"
 g_count_of_received_symbols = 1000
 # g_user_db_path = "user_db.sql"
-g_empty_response = ''
+g_empty_response = b"error"
 g_max_attempts = 10
 g_error_sleep_sec = 0.04
 
