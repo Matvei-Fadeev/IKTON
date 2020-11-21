@@ -34,6 +34,7 @@ def get_table(label):
     user_row = cursor.fetchone()
 
     if user_row == None:
+        print(1)
         return []
     return user_row
 
@@ -42,8 +43,10 @@ def sort_by_priority(users):
     not_priority_users = []
     for i in range(len(users)):
         if users[i][5]:
+            print(2)
             priority_users.append(users[i])
         else:
+            print(3)
             not_priority_users.append(users[i])
 
     new_users = priority_users + not_priority_users
@@ -52,9 +55,11 @@ def sort_by_priority(users):
 def process_user_data(data):
     print(data)
     if data == b'':
+        print(4)
         return cfg.g_empty_response
 
     user_data = data.split(cfg.separateSymbol)
+    print(user_data)
     cmd = user_data[cfg.CMD]
     label = user_data[cfg.LABEL]
 
@@ -62,14 +67,19 @@ def process_user_data(data):
     conn = sqlite3.connect(cfg.g_user_db_path)
     cursor = conn.cursor()
     try:
+        print("1")
         if db_exist(path):
+            print("2")
             if cmd == "create":
+                print(5)
                 return cfg.err_already_created
 
             if len(user_data) >= cfg.DATA_COUNT:
+                print(7)
                 name = user_data[cfg.NAME]
                 tid = user_data[cfg.tID]
                 if cmd == "show":
+                    print(9)
                     unsorted_users = get_table(cursor)
 
                     for elem in unsorted_users:
@@ -78,15 +88,20 @@ def process_user_data(data):
                     sorted_users = sort_by_priority(unsorted_users)
                     return sorted_users
                 elif cmd == "add":
+                    print("zxc")
                     return add_user(cursor, name, telegram_id)
                 elif cmd == "remove":
+                    print("fas")
                     return remove_user(cursor, name)
         else:
             if cmd == "create":
+                print("a")
                 create_table(path)
             else:
+                print("b")
                 return cfg.err_not_exist
     except sqlite3.DatabaseError as err:
+        print("exception")
         time.sleep(cfg.g_error_sleep_sec)
     conn.close()
 
@@ -99,3 +114,12 @@ if "__main__" == __name__:
             , [ 6, "qwejbpk,ty", '@qwegfghrty', None, None, False]]
     print(sort_by_priority(users))
     #
+    "CMD|KIGK3122|MySuperNickname|TelegramID|"
+    "create|QWE|Vasya|Petya"
+    "create|IKTK3122|Vasya|Petya|"
+    "add|IKTK3122|Ghdfhkdjf|gflkbijgf|"
+    "show|IKTK3122|Ghdfhkdjf|gflkbijgf|"
+    "show|IKTK3122|||"
+    "add|KIGK3122|QWERTY|ASDFGH|"
+    "remove|KIGK3122|QWERTY|ASDFGH|"
+    "remove|KIGK3122|QWERT|ASDFG|"
