@@ -13,10 +13,13 @@ def welcome_start(message):
 def welcome_help(message):
 	bot.send_message(message.chat.id, 'welcome_help')
 
-@bot.message_handler(commands=['button'])
+@bot.message_handler(commands=['text'])
 def get_button(message):
-	bot.send_message(message.chat.id, 'Button')
-    ## Button here
+	if message.text == "Кнопка":
+		keyboard = types.InlineKeyboardMarkup()
+		callback_button = types.InlineKeyboardButton(text="Нажми меня", callback_data="test")
+		keyboard.add(callback_button)
+		bot.send_message(message.chat.id, "Я – сообщение из обычного режима", reply_markup=keyboard)
 
 
 @bot.message_handler(content_types=['text'])
