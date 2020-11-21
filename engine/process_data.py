@@ -1,4 +1,5 @@
 import cfg
+import os.path
 
 """
     import
@@ -17,6 +18,7 @@ def db_exist(path) -> bool:
         check for existing of file in Unix system
         find function
     """
+    os.path.isfile('')
 
 def create_table(label):
     # current folder is IKTON/engine

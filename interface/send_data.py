@@ -13,3 +13,4 @@ if "__main__" == __name__:
     print(send_data(b"create|qwe|qwe|123|qwe"))
     print(send_data(b"afsas"))
     print(send_data(b"12312"))
+    # nc localhost 2222
