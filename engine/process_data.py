@@ -52,7 +52,8 @@ def sort_by_priority(users):
     new_users = priority_users + not_priority_users
     return new_users
 
-def process_user_data(data):
+def process_user_data(bytes_data):
+    data = bytes_data.decode('ascii').lower()
     print(data)
     if data == b'':
         print(4)
