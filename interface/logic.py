@@ -7,9 +7,9 @@ bot = telebot.TeleBot(bot_token)
 @bot.message_handler(content_types=["text"])
 def main_display(message):
     initials = ""
-    bot.send_message(message.user.id, "Введите ФИО")
+    bot.send_message(message.chat.id, "Введите ФИО")
     initials = message.test
-    bot.send_message(message.user.id, "Введите команду /start.")
+    bot.send_message(message.chat.id, "Введите команду /start.")
 
 def make_the_queue(message):
     lable = ""
