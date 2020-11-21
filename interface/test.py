@@ -14,6 +14,12 @@ name = ''
 surname = ''
 age = 0
 
+def get_name(message):
+	global name
+	name = message.text
+	bot.send_message(message.from_user.id, 'Назови свою фамилию.')
+	bot.register_next_step_handler(message, getsurname)
+
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
 	if message.text == "Начать очередь":
@@ -30,12 +36,6 @@ def start(message):
 		bot.register_next_step_handler(message, get_name) #следующий шаг – функция get_name
 	else:
 		bot.send_message(message.from_user.id, 'Напиши /reg')
-
-def get_name(message):
-	global name
-	name = message.text
-	bot.send_message(message.from_user.id, 'Назови свою фамилию.')
-	bot.register_next_step_handler(message, getsurname)
 
 def get_surname(message):
 	global surname
