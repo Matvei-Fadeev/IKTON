@@ -1,8 +1,8 @@
 import telebot
 from queue_bot_token import bot_token
+from telebot import types
 
 bot = telebot.TeleBot(bot_token)
-
 
 @bot.message_handler(commands=['start', 'help'])
 def welcome_start(message):
@@ -31,10 +31,10 @@ def get_name(message):
 def get_text_messages(message):
 	if message.text == "Начать очередь":
 		keyboard = types.InLineKeyboardMarkup()
-		key_list = types.InLineKeyboardButton(text="Создание списка")
+		key_list = types.InLineKeyboardButton(text="Создание списка", callback_data="list_set")
 		keyboard.add(key_list)
 		options = "Возможные действия:"
-		bot.send_message(message.from_user.id, options, reply_markup=keyboard)
+		bot.send_message(message.from_user.id, text=options, reply_markup=keyboard)
 	elif message.text == '/reg':
 		bot.register_next_step_handler(message, get_name) #следующий шаг – функция get_name
 	else:
