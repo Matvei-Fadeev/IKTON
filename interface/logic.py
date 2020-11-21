@@ -26,7 +26,6 @@ def make_the_queue(message):
 
 @bot.message_handler(commands=["start"])
 def welcome_start():
-    main_display(message)
     @bot.message_handler(content_types=["text"])
     def get_button(message):
         bot.send_message(message.chat.id, "Варианты действий")
