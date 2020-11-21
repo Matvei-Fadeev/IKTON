@@ -6,10 +6,11 @@ bot = telebot.TeleBot(bot_token)
 
 @bot.message_handler(content_types=["text"])
 def main_display(message):
-    initials = ""
-    bot.send_message(message.chat.id, "Введите ФИО")
-    initials = message.text
-    bot.send_message(message.chat.id, "Введите команду /start.")
+    if message.text != "/start" and message.text != "/help":
+        initials = ""
+        bot.send_message(message.chat.id, "Введите ФИО")
+        initials = message.text
+        bot.send_message(message.chat.id, "Введите команду /start.")
 
 def make_the_queue(message):
     lable = ""
