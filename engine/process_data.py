@@ -37,44 +37,6 @@ def get_table(label):
         return []
     return user_row
 
-
-def process_user_data(data):
-    print(data)
-    if data == b'':
-        return cfg.g_empty_response
-
-    user_data = data.split(cfg.separateSymbol)
-
-    # There
-    path = cfg.db_files_location + label + ".sql"
-    conn = sqlite3.connect(cfg.g_user_db_path)
-    cursor = conn.cursor()
-    try:
-        if db_exist(path):
-            if cmd == "create":
-                return cfg.err_already_created
-            elif cmd == "show":
-                unsorted_users = get_table(cursor)
-
-                for elem in unsorted_users:
-                    print(elem)
-
-                sorted_users = sort_by_priority(unsorted_users)
-                return sorted_users
-            elif cmd == "add":
-                return add_user(cursor, name, telegram_id)
-            elif cmd == "remove":
-                return remove_user(cursor, name)
-        else:
-            if cmd == "create":
-                create_table(path)
-            else:
-                return cfg.err_not_exist
-    except sqlite3.DatabaseError as err:
-        time.sleep(cfg.g_error_sleep_sec)
-    conn.close()
-
-
 def sort_by_priority(users):
     priority_users = []
     not_priority_users = []
@@ -87,15 +49,48 @@ def sort_by_priority(users):
     new_users = priority_users + not_priority_users
     return new_users
 
+def process_user_data(data):
+    print(data)
+    if data == b'':
+        return cfg.g_empty_response
+
+    user_data = data.split(cfg.separateSymbol)
+    cmd = user_data[cfg.CMD]
+    label = user_data[cfg.LABEL]
+
+    path = cfg.db_files_location + label + ".sql"
+    conn = sqlite3.connect(cfg.g_user_db_path)
+    cursor = conn.cursor()
+    try:
+        if db_exist(path):
+            if cmd == "create":
+                return cfg.err_already_created
+
+            if len(user_data) >= cfg.DATA_COUNT:
+                name = user_data[cfg.NAME]
+                tid = user_data[cfg.tID]
+                if cmd == "show":
+                    unsorted_users = get_table(cursor)
+
+                    for elem in unsorted_users:
+                        print(elem)
+
+                    sorted_users = sort_by_priority(unsorted_users)
+                    return sorted_users
+                elif cmd == "add":
+                    return add_user(cursor, name, telegram_id)
+                elif cmd == "remove":
+                    return remove_user(cursor, name)
+        else:
+            if cmd == "create":
+                create_table(path)
+            else:
+                return cfg.err_not_exist
+    except sqlite3.DatabaseError as err:
+        time.sleep(cfg.g_error_sleep_sec)
+    conn.close()
+
 if "__main__" == __name__:
-
-    table_name = "queue"
-    column_name = "nickname"
-    column_tid = "telegramID"
-    column_data = "data"        #!!!!!!
-    column_pos = "position"     #!!!!!!
-    column_pri = "priority"
-
     users = [[ 1, "qwerty", '@qwerty', None, None, False]
             , [2, "Qwerty1", "@Qwerbgcbvty1", None, None, True]
             , [ 3, "1qoerty", '@qwttyerty', None, None, True]
