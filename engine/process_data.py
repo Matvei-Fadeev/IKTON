@@ -39,6 +39,7 @@ def get_table(label):
 
 
 def process_user_data(data):
+    print(data)
     if !data:
         return cfg.g_empty_response
 
