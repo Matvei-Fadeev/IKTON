@@ -2,6 +2,7 @@ import telebot
 from queue_bot_token import bot_token
 from telebot import types
 
+
 bot = telebot.TeleBot(bot_token)
 
 @bot.message_handler(commands=['start', 'help'])
