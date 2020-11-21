@@ -4,14 +4,24 @@ from telebot import types
 
 bot = telebot.TeleBot(bot_token)
 
-
-initials = ""
-id_data = user.id
+@bot.message_handler(content_types=["text"])
 def main_display(message):
-    bot.send_message(message.chat.id, "Введите ФИО")
-    @bot.message_handler(content_types=["text"])
-    global initials = message.text
-    bot.send_message(message.chat.id, "Введите команду /start.")
+    initials = ""
+    bot.send_message(message.user.id, "Введите ФИО")
+    initials = message.test
+    bot.send_message(message.user.id, "Введите команду /start.")
+
+def make_the_queue(message):
+    lable = ""
+    bot.send_message(message.from_user.id, 'Отправь короткую ссылку для создания очереди.')
+    lable = message.text
+    # отправили вопрос "Отправь короткую ссылку"
+    # (((желательно дисциплина и группа будет содержаться в имени ссылки)))
+    # link = input()
+    # создается файл БД с этим именем
+    # join_to_queue_display(link)
+
+
 
 @bot.message_handler(commands=["start"])
 def welcome_start():
@@ -26,28 +36,16 @@ def welcome_start():
         keyboard.add(enter_queue)
         bot.send_message(message.from_user.id, "Нажмити на кнопку:", reply_markup=keyboard)
 
-        @bot.callback_query_handler(func=lambda call: True)
-        def callback_worker(call):
-            if call.data == "set":
-                bot.send_message(call.message.chat.id, "set_work")
-            if call.data == "enter":
-                bot.send_message(call.message.chat.id, "enter_work")
+        # @bot.callback_query_handler(func=lambda call: True)
+        # def callback_worker(call):
+        #     if call.data == "set":
+        #         bot.send_message(call.message.chat.id, "set_work")
+        #     if call.data == "enter":
+        #         bot.send_message(call.message.chat.id, "enter_work")
 
 @bot.message_handler(commands=["help"])
 def welcome_help(message):
     bot.send_message(message.chat.id, 'Список команд:/help, /start')
-
-lable = ""
-@bot.message_handler(content_types=["text"])
-def make_the_queue(message):
-    bot.send_message(message.from_user.id, 'Отправь короткую ссылку для создания очереди.')
-    global lable
-    lable = message.text
-    # отправили вопрос "Отправь короткую ссылку"
-    # (((желательно дисциплина и группа будет содержаться в имени ссылки)))
-    # link = input()
-    # создается файл БД с этим именем
-    # join_to_queue_display(link)
 
 # link = то, что выбрал юзер
 # def join_to_queue_display(link):
