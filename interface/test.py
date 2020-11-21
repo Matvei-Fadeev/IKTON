@@ -1,5 +1,7 @@
 import telebot
-bot = telebot.TeleBot('1465761077:AAF1MCjRHGKLO9PLwZ76opefreE2btD9bIw')
+from queue_bot_token import bot_token
+
+bot = telebot.TeleBot(bot_token)
 
 
 @bot.message_handler(commands=['start', 'help'])
