@@ -19,9 +19,17 @@ tID = 3
 DATA_COUNT = 4
 
 
-g_db_full_row = "*"
-g_db_table_name = "users_licenses"
-g_db_license_key = "license_key"
-g_db_column_id = "user_id"
-g_db_column_hwid = "hwid"
-g_db_column_expiration_date = "expiration_date"
+full_row = "*"
+table_name = "queue"
+column_name = "nickname"
+column_tid = "telegramID"
+column_data = "data"        #!!!!!!
+column_pos = "position"     #!!!!!!
+column_pri = "priority"
+
+
+# Errors
+err_already_created = "err_already_created"
+err_not_exist = "err_not_exist"
+err = "error"
+err_success = "success"
