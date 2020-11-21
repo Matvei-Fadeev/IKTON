@@ -37,11 +37,9 @@ class EchoServer(asyncore.dispatcher):
 def main():
     while True:
         try:
-            logger.info("Server is started")
             server = EchoServer(cfg.HOST, cfg.PORT)
             asyncore.loop()
         except Exception as err:
-            logger.error(err)
             time.sleep(cfg.g_error_sleep_sec)
 
 

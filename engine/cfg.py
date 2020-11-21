@@ -6,6 +6,7 @@ g_count_of_received_symbols = 1000
 # g_user_db_path = "user_db.sql"
 g_empty_response = '0'
 g_max_attempts = 10
+g_error_sleep_sec = 0.04
 
 
 
