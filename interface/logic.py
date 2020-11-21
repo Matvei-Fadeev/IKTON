@@ -8,7 +8,7 @@ bot = telebot.TeleBot(bot_token)
 def main_display(message):
     initials = ""
     bot.send_message(message.chat.id, "Введите ФИО")
-    initials = message.test
+    initials = message.text
     bot.send_message(message.chat.id, "Введите команду /start.")
 
 def make_the_queue(message):
