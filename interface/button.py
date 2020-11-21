@@ -13,19 +13,12 @@ def welcome_start(message):
 def welcome_help(message):
 	bot.send_message(message.chat.id, 'welcome_help')
 
-@bot.message_handler(commands=['text'])
-def get_button(message):
-	if message.text == "Кнопка":
-		keyboard = types.InlineKeyboardMarkup()
-		callback_button = types.InlineKeyboardButton(text="Нажми меня", callback_data="test")
-		keyboard.add(callback_button)
-		bot.send_message(message.chat.id, "Я – сообщение из обычного режима", reply_markup=keyboard)
-
-
-@bot.message_handler(content_types=['text'])
-def get_text_messages(message):
-	# Here is button realization
-    bot.send_message(message.chat.id, 'get_text_messages')
-
+@bot.message_handler(content_types=["text"])
+def default_test(message):
+        keyboard = types.InlineKeyboardMarkup()
+        url_button = types.InlineKeyboardButton(text="Перейти на Яндекс", url="https://ya.ru")
+        keyboard.add(url_button)
+        bot.send_message(message.chat.id, "Привет! Нажми на кнопку и перейди в поисковик.", reply_markup=keyboard)
 
 bot.polling(none_stop=True, interval=0)
+
