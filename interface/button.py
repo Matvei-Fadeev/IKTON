@@ -29,5 +29,18 @@ def get_button(message):
         keyboard.add(delete_queue_button)
 
         bot.send_message(message.from_user.id, "Нажмити на кнопку:", reply_markup=keyboard)
-
+@bot.callback_query_handler(func=lambda call: True)
+def query_handler(call):
+    bot.answer_callback_query(callback_query_id=call.id, text='Ответ')
+    answer = ""
+    arr = [1, 2, 3, 4]
+    if call.data == "set":
+        answer = "Введите короткую ссылку для очереди."
+    if call.data == "see":
+        answer = arr
+    if call.data == "add":
+        answer = arr.append(len(arr) + 1)
+    if call.data == "delete":
+        answer = ""
+    bot.send_message(call.message.chat.id, answer)
 bot.polling(none_stop=True, interval=0)
