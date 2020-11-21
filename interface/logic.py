@@ -4,9 +4,6 @@ from telebot import types
 
 bot = telebot.TeleBot(bot_token)
 
-
-
-id_data = user.id
 @bot.message_handler(content_types=["text"])
 def main_display(message):
     initials = ""
