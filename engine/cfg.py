@@ -31,6 +31,7 @@ column_pri = "priority"
 # Errors
 err_bad_response = "err_bad_response"
 err_already_created = "err_already_created"
+err_already_added = "err_already_added"
 err_not_exist = "err_not_exist"
 err = "error"
 err_success = "success"

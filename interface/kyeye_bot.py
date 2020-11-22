@@ -10,28 +10,44 @@ from server_interface import send_data_to_server
 
 bot = telebot.TeleBot(bot_token)
 
-label = ''
+queue_name = ''
 state = cfg.MENU
 
-def get_nickname(message):
-    bot.send_message(message.from_user.id, 'Назови своё имя.')
-    global nickname
-    nickname = message.text
+"""
+    (1, 'matvei fadeev', 913446742, None, None, 0)
+    (2, 'notclacker', 1388600539, None, None, 0)
+
+    1) matvei fadeev
+"""
+def parsing_data_from_server(queue_name):
+    response = send_data_to_server("show|%s|||" % (queue_name))
+    users = response.split('|')
+    result = ""
+    for i in range(len(users)):
+        user_data = users[i].split("'")
+        if len(user_data) >= 2:
+            user = user_data[1]
+            result += str(i) + ") " + user.title().strip() + "\n"
+    return result
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
 	bot.send_message(
 		message.chat.id,
-		"Добро пожаловать. " + message.from_user.username + " "
-                                    + message.from_user.first_name + " "
-                                    + message.from_user.last_name + " "
-                                    + str(message.from_user.id) + " " + "✌",
+		"Добро пожаловать. " + message.from_user.username + " ✌",
 		reply_markup=main_display_keyboard())
 
 @bot.message_handler(content_types=["text"])
 def bot_text_handler(message):
     global state
+    global queue_name
     chat_id = message.chat.id
+
+    true_name = message.from_user.username
+    if message.from_user.first_name is not None and message.from_user.last_name is not None:
+        true_name = message.from_user.first_name + " " + message.from_user.last_name
+    telegram_id = "1337" if message.from_user.id is None else str(message.from_user.id)
+
     if message.text == 'Меню':
         state = cfg.MENU
         text = '✅ Основное меню \n\n'
@@ -47,29 +63,64 @@ def bot_text_handler(message):
         text = '✅ Введите название очереди для присоединения. \n\n'
         bot.send_message(chat_id, text, parse_mode='HTML',reply_markup=queue_display_keyboard())
 
+    elif message.text == "Занять":
+        state = cfg.JOIN_TO_CURRENT_QUEUE
+        request = "add|%s|%s|%s|" % (queue_name, true_name, telegram_id)
+        response = send_data_to_server(request)
+        bot.send_message(message.from_user.id, 'Ответ сервера : %s' % (response))
+        if "err" in response:
+            text = '❌ ошибка сервера : %s' % (response)
+        else:
+            text = '✅ успешно добавлен в очередь - %s' % (queue_name)
+        bot.send_message(chat_id, text, parse_mode='HTML',reply_markup=in_queue_display_keyboard())
+
+
+    elif message.text == "Покинуть очередь":
+        state = cfg.GET_OUT_CURRENT_QUEUE
+
+        request = "remove|%s|%s|%s|" % (queue_name, true_name, telegram_id)
+        response = send_data_to_server(request)
+        bot.send_message(message.from_user.id, 'Ответ сервера : %s' % (response))
+
+        text = '✅ Вы покинули очередь. \n\n'
+        bot.send_message(chat_id, text, parse_mode='HTML',reply_markup=queue_display_keyboard())
+
+    elif message.text == "Список":
+        state = cfg.PRINT_QUEUE
+        response = parsing_data_from_server(queue_name)
+        #response = send_data_to_server("show|%s|||" % (queue_name))
+        text = '✅ Вот текущая очередь. \n\n'
+        bot.send_message(message.from_user.id, '🚻 Список людей в очереди ℹ️:\n %s' % (response))
+        bot.send_message(chat_id, text, parse_mode='HTML',reply_markup=queue_display_keyboard())
+
+
+        """
+            Ниже происходит перехват сообщений пользователя
+            , а также вывод данных по запросу пользователя
+        """
     else:
+        #queue_name = message.text
         if state != cfg.MENU:
-            global label
-            label = message.text
+            #label = message.text
+            queue_name = message.text
 
         if state == cfg.CREATE_GET_LABEL:
-            queue_name = message.text
             #bot.send_message(message.from_user.id, 'Хочешь создать очередь %s?' % (queue_name))
             response = send_data_to_server("create|%s|||" % (queue_name))
-            if "error" in response:
-                bot.send_message(message.from_user.id, '❌ ошибка сервера : %s?' % (response))
+            if "err" in response:
+                bot.send_message(message.from_user.id, '❌ ошибка сервера : %s' % (response))
             else:
                 bot.send_message(message.from_user.id, '✅ успешно созданна очередь - %s' % (queue_name))
 
         elif state == cfg.JOIN_GET_LABEL:
-            #bot.send_message(message.from_user.id, 'Хочешь найти очередь %s?' % (message.text))
-            queue_name = message.text
-            response = send_data_to_server("show|%s|||" % (queue_name))
-            bot.send_message(message.from_user.id, 'Ответ сервера : %s?' % (response))
-
-
+            response = parsing_data_from_server(queue_name)
+            #response = send_data_to_server("show|%s|||" % (queue_name))
+            bot.send_message(message.from_user.id, '🚻 Список людей в очереди ℹ️:\n %s' % (response))
+        # elif state == cfg.JOIN_TO_CURRENT_QUEUE:
+        #
+        # elif state == cfg.GET_OUT_CURRENT_QUEUE:
         else:
-            pass
+            bot.send_message(message.from_user.id, 'WTF is happend : %d' % (state))
 
 
 def first_bot_start():
