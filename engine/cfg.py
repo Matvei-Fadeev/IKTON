@@ -10,7 +10,7 @@ g_empty_response = b"error"
 g_max_attempts = 10
 g_error_sleep_sec = 0.04
 
-
+cmds = ["create", "add", "remove", "show"]
 "CMD|KIGK3122|MySuperNickname|TelegramID|"
 CMD = 0
 LABEL = 1
@@ -29,6 +29,7 @@ column_pri = "priority"
 
 
 # Errors
+err_bad_response = "err_bad_response"
 err_already_created = "err_already_created"
 err_not_exist = "err_not_exist"
 err = "error"

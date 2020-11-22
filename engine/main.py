@@ -11,8 +11,9 @@ class EchoHandler(asyncore.dispatcher_with_send):
         for attempt in range(cfg.g_max_attempts):
             try:
                 data = self.recv(cfg.g_count_of_received_symbols)
-                response = process_user_data(data)
-                self.send(response + b'\0')
+                response = bytes(process_user_data(data), encoding = 'ascii')
+                self.send(response + b"\n\n" + b'\0')
+                print("End = ", response)
             except Exception as err:
                 time.sleep(cfg.g_error_sleep_sec)
             else:
