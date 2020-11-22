@@ -20,16 +20,18 @@ if "__main__" == __name__:
     cursor = conn.cursor()
 
     name = "Vasya"
-    tid = "@sanya"
+    tid = "412142"
 
-    #add_user(cursor, name, tid)
+    add_user(cursor, conn, name, tid)
+    add_user(cursor, conn, name, tid)
+    add_user(cursor, conn, name, tid)
     #add_user(cursor, name+"1", tid+"5")
 
     result = get_table(cursor)
     for elem in result:
         print(elem)
 
-    remove_user_by_name(cursor, name)
+    remove_user_by_tid(cursor, conn, tid)
 
     result = get_table(cursor)
     for elem in result:

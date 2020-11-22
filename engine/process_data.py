@@ -4,28 +4,39 @@ import cfg
 import os.path
 import shutil
 
-def add_user(cursor, conn, name, telegram_id):
-    request = """
-        INSERT INTO queue (nickname, telegramID, priority)
-        VALUES ('%s', '%s', 0)
-    """ % (name, telegram_id)
-    cursor.execute(request)
-    conn.commit()
-    return cfg.err_success
 
-def remove_user_by_name(cursor, conn, name, telegram_id=''):
+def add_user(cursor, conn, name, telegram_id):
+    check_request = """
+    SELECT * FROM queue
+    WHERE telegramID = '%s'
+    """ % (telegram_id)
+    cursor.execute(check_request)
+    user_rows = cursor.fetchall()
+    if not user_rows:
+        request = """
+            INSERT INTO queue (nickname, telegramID, priority)
+            VALUES ('%s', '%s', 0)
+        """ % (name, telegram_id)
+        cursor.execute(request)
+        conn.commit()
+        return cfg.err_success
+    else:
+        return cfg.err_already_added
+
+
+def remove_user_by_tid(cursor, conn, telegram_id):
     request = """
     DELETE FROM queue
-    WHERE nickname = '%s'
-    """ % (name)
+    WHERE telegramID = '%s'
+    """ % (telegram_id)
     # ================
     cursor.execute(request)
     conn.commit()
     return cfg.err_success
 
+
 def db_exist(path) -> bool:
     return os.path.isfile(path)
-
 def create_table(path):
     current_path = "./template.sql"
     # ON LINUX : cp template.sql db_queues/new_name.sql
@@ -102,7 +113,7 @@ def process_user_data(bytes_data):
                 elif cmd == "add":
                     return add_user(cursor, conn, name, telegram_id)
                 elif cmd == "remove":
-                    return remove_user_by_name(cursor, conn, name)
+                    return remove_user_by_tid(cursor, conn, telegram_id)
         else:
             return cfg.err_not_exist
     except sqlite3.DatabaseError as err:
