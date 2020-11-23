@@ -37,7 +37,7 @@ def remove_user_by_tid(cursor, conn, telegram_id):
 
 def db_exist(path) -> bool:
     return os.path.isfile(path)
-def create_table(path):
+def create_sql_file(path):
     current_path = "./template.sql"
     # ON LINUX : cp template.sql db_queues/new_name.sql
     shutil.copyfile(current_path, path)
@@ -89,7 +89,7 @@ def process_user_data(bytes_data):
         if db_exist(path):
             return cfg.err_already_created
         else:
-            create_table(path)
+            create_sql_file(path)
             return cfg.err_success
 
     conn = sqlite3.connect(path)
